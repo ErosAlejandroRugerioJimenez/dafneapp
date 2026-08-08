@@ -25,8 +25,6 @@ export class App implements AfterViewInit {
       }
     });
   }
-
- // Antes estaba así: @HostListener('window:resize', ['$event'])
   
   @HostListener('window:resize')
   onResize() {
@@ -36,8 +34,18 @@ export class App implements AfterViewInit {
   }
 
   centerButton() {
-    this.buttonLeft = (window.innerWidth - this.btnRef.nativeElement.clientWidth) / 2;
-    this.buttonTop = (window.innerHeight - this.btnRef.nativeElement.clientHeight) / 2;
+    // Calculamos el ancho y alto real del botón en ese momento
+    const btnWidth = this.btnRef.nativeElement.clientWidth;
+    const btnHeight = this.btnRef.nativeElement.clientHeight;
+    
+    // Calculamos el centro
+    const calcLeft = (window.innerWidth - btnWidth) / 2;
+    const calcTop = (window.innerHeight - btnHeight) / 2;
+
+    // El Math.max asegura que, si la pantalla es muy delgada, 
+    // el botón nunca se pegue al borde izquierdo a menos de 20px
+    this.buttonLeft = Math.max(20, calcLeft);
+    this.buttonTop = Math.max(20, calcTop);
   }
 
   moveButton() {
@@ -46,8 +54,12 @@ export class App implements AfterViewInit {
       const maxX = window.innerWidth - this.btnRef.nativeElement.clientWidth - safeMargin;
       const maxY = window.innerHeight - this.btnRef.nativeElement.clientHeight - safeMargin;
 
-      this.buttonLeft = Math.floor(Math.random() * (maxX - 20)) + 20;
-      this.buttonTop = Math.floor(Math.random() * (maxY - 20)) + 20;
+      // Evitamos valores negativos si la pantalla es extremadamente pequeña
+      const randomX = Math.floor(Math.random() * Math.max(1, maxX - 20)) + 20;
+      const randomY = Math.floor(Math.random() * Math.max(1, maxY - 20)) + 20;
+
+      this.buttonLeft = randomX;
+      this.buttonTop = randomY;
 
       this.attempts++;
     }
