@@ -85,6 +85,19 @@ export class App implements AfterViewInit {
   }
 
   closeModal() {
+    // 1. Ocultamos el modal
     this.showModal = false;
+    
+    // 2. Reiniciamos los intentos a cero
+    this.attempts = 0;
+
+    // 3. Volvemos a centrar el botón
+    // Usamos setTimeout para darle tiempo a Angular de cambiar el texto del botón 
+    // ("Bueno, ya presióname" -> "Hola Dafne...") antes de calcular el nuevo tamaño y centro.
+    setTimeout(() => {
+      if (this.btnRef) {
+        this.centerButton();
+      }
+    });
   }
 }
